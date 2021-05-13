@@ -1,0 +1,16 @@
+{% extends 'moderation/base.html' %}
+{% block meta %}
+    <meta name="Description" content="{{ APP_NAME }} Moderation - denial reason delete confirmation page">
+{% endblock meta %}
+{% block content %}
+    <form method="POST" class="form-container form-container-md" novalidate>
+        <fieldset class="form-group">
+            <h1><legend class="border-bottom mb-4">Confirm deletion of the reason: "{{ object.description }}"?</legend></h1>
+            {% csrf_token %}
+        </fieldset>
+        <div class="form-group">
+            <a class="btn btn-secondary" href="{% url 'moderation:denial-reason-list' %}">No, Cancel</a>
+            <button class="btn btn-danger ml-2">Yes, Delete</button>
+        </div>
+    </form>
+{% endblock content %}

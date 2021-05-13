@@ -1,0 +1,16 @@
+{% extends 'base/base_form.html' %}
+{% block meta %}
+    <meta name="Description" content="{{ APP_NAME }} delete account page">
+{% endblock meta %}
+{% block content %}
+    <form method="POST" class="form-container form-container-md" novalidate>
+        <fieldset class="form-group">
+            <h1><legend class="border-bottom mb-4">By confirming that you want to delete your account, all of your posts, approved or not, along with your personal data, like your email address and your profile picture, will be excluded within a {{ hours }} hours period. Your username, although, will not be available again. Before the exclusion takes effect, you can cancel this request either by an email that will be sent to you or in your account profile page. Do you want to proceed?</legend></h1>
+            {% csrf_token %}
+        </fieldset>
+        <div class="form-group">
+            <a class="btn btn-secondary" href="{% url 'users:account' %}">No, Cancel</a>
+            <button class="btn btn-danger ml-2">Yes, Delete</button>
+        </div>
+    </form>
+{% endblock content %}

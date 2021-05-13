@@ -1,0 +1,13 @@
+{% extends 'base/base.html' %}
+{% block meta %}
+    <meta name="Description" content="{{ APP_NAME }} error page">
+{% endblock meta %}
+{% block content %}
+    <div class="container-msg container-msg-top">
+        <h1>{% block code %}{% endblock %}</h1>
+        <p>{% block msg %}{% endblock %}</p>
+        {% block redirect_button %}
+        <a class="btn btn-lg btn-dark" href="{% url 'posts:home' %}">Go to Home Page</a>
+        {% endblock %}
+    </div>
+{% endblock content %}

@@ -1,0 +1,29 @@
+{% extends 'base/base.html' %}
+{% block alerts %}
+{% for err in form.non_field_errors %}
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        {{ err }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+{% endfor %}
+{% endblock alerts %}
+{% block content %}
+    <form method="POST" class="form-container form-container-sm" novalidate>
+        <fieldset class="form-group">
+            <h1><legend class="border-bottom mb-4">{{ title }}</legend></h1>
+            {% csrf_token %}
+            {% block formcontent%}{% endblock formcontent %}
+        </fieldset>
+        <div class="form-group">
+            <button class="btn btn-dark btn-block">{% if btn_title %}{{ btn_title }}{% else %}{{ title }}{% endif %}</button>
+        </div>
+        <br>
+        {% block skiplink %}{% endblock %}
+    </form>
+{% endblock content %}
+{% block scripts %}
+    {% load static %}
+    <script src="{% static 'base/js/forms.js' %}" type="text/javascript"></script>
+{% endblock scripts %}

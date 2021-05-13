@@ -1,0 +1,44 @@
+{% extends 'moderation/base.html' %}
+{% load widget_tweaks %}
+{% block meta %}
+    <meta name="Description" content="{{ APP_NAME }} Moderation - denial reason create page">
+{% endblock meta %}
+{% block alerts %}
+{% for err in form.non_field_errors %}
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        {{ err }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+{% endfor %}
+{% endblock alerts %}
+{% block content %}
+    <form method="POST" class="form-container form-container-sm" novalidate>
+        <fieldset class="form-group">
+            <h1><legend class="border-bottom mb-4">Post Denial Reason</legend></h1>
+            {% csrf_token %}
+            <div class="form-group">
+                <label class="form-control-label" for="description">{{ form.description.label }}</label>
+                {% if form.description.errors %}
+                {% render_field form.description class="form-control is-invalid" name="description" id="description" placeholder="Reason description" %}
+                <div class="invalid-feedback">
+                    {% for error in form.description.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                {% render_field form.description class="form-control" name="description" id="description" placeholder="Reason description" %}
+                {% endif %}
+            </div>
+        </fieldset>
+        <div class="form-group">
+            <button class="btn btn-dark btn-block">Save</button>
+        </div>
+    </form>
+{% endblock content %}
+{% block scripts %}
+    {{ block.super }}
+    {% load static %}
+    <script src="{% static 'base/js/forms.js' %}" type="text/javascript"></script>
+{% endblock scripts %}

@@ -1,0 +1,13 @@
+{% extends 'moderation/base.html' %}
+{% block meta %}
+    <meta  http-equiv="Refresh" content="5" name="Description" content="{{ APP_NAME }} Moderation - moderate fetch page">
+{% endblock meta %}
+{% block content %}
+    <div class="container-msg container-msg-top">
+        <div class="d-flex justify-content-center">
+            <div class="spinner-border" role="status"></div>
+        </div>
+        <p>Fetching post to moderate. Please, wait.</p>
+        <a class="btn btn-lg btn-dark" href="{% url 'moderation:moderate-stop' %}">Stop Moderating</a>
+    </div>
+{% endblock content %}

@@ -1,0 +1,34 @@
+{% extends 'base/base.html' %}
+{% block meta %}
+    <meta name="Description" content="{{ APP_NAME }} post view page">
+{% endblock meta %}
+{% block navbar-options %}
+                {% if user.is_authenticated %}
+                <li class="nav-item active">
+                    <a class="nav-link" href="{% url 'posts:create-post' %}">Post Meme</a>
+                </li>
+                {% if user.is_moderator %}
+                <li class="nav-item active">
+                    <a class="nav-link" href="{% url 'moderation:home' %}">Moderation</a>
+                </li>
+                {% endif %}
+                {% endif %}
+{% endblock navbar-options %}
+{% block content %}
+    <article class="post-container form-container form-container-md">
+        <header class="info-user-post">
+            <a href="{% url 'posts:author-posts' username=object.author.username %}">
+                <img class="rounded-circle author-img" src="{{ object.author.profile_pic.url }}" alt="Picture Not Found">
+            </a>
+            <a href="{% url 'posts:author-posts' username=object.author.username %}">
+                <h1 class="author-username">{{ object.author.username }}</h1>
+            </a>
+        </header>
+        <img class="meme-preview mt-3 mb-3" src="{{ object.meme_file.url }}" alt="File Not Found">
+        <div class="tags-container mt-3">
+            {% for tag in object.tags_sorted %}
+            <span class="badge badge-dark text-wrap post-tag">{{ tag.description }}</span>
+            {% endfor %}
+        </div>
+    </article>
+{% endblock content %}

@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+    <p>Hello, {{ user.username }}! There was a request to delete your {{ APP_NAME }} account. If it wasn't you or you don't want to delete your account anymore, you can cancel it by clicking on the following link:</p>
+    <a href="{{ link }}" target="_blank">{{ link }}</a>
+    <br>
+    <br>
+    <p>This link is only valid for {{ hours }} hours.</p>
+</body>
+</html>

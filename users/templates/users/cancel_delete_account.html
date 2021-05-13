@@ -1,0 +1,16 @@
+{% extends 'base/base_form.html' %}
+{% block meta %}
+    <meta name="Description" content="{{ APP_NAME }} cancel account deletion page">
+{% endblock meta %}
+{% block content %}
+    <form method="POST" class="form-container form-container-md" novalidate>
+        <fieldset class="form-group">
+            <h1><legend class="border-bottom mb-4">Confirm cancelling your account deletion request?</legend></h1>
+            {% csrf_token %}
+        </fieldset>
+        <div class="form-group">
+            <a class="btn btn-secondary" href="{% url 'users:account' %}">No, Keep It</a>
+            <button class="btn btn-success ml-2">Yes, Cancel</button>
+        </div>
+    </form>
+{% endblock content %}

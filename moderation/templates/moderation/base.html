@@ -1,0 +1,21 @@
+{% extends 'base/base.html' %}
+{% block meta %}
+    <meta name="Description" content="{{ APP_NAME }} Moderation - home page">
+{% endblock meta %}
+{% block navbar-options %}
+                <li class="nav-item active">
+                    <a class="nav-link" href="{% url 'moderation:denial-reason-list' %}">Denial Reasons</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="{% url 'moderation:moderate-start' %}">Moderate</a>
+                </li>
+{% endblock navbar-options %}
+{% block content %}
+    <div class="container-msg">
+        <p>No memes so far</p>
+    </div>
+{% endblock content %}
+{% block scripts %}
+    {% load static %}
+    <script src="{% static 'moderation/js/moderation.js' %}" type="text/javascript"></script>
+{% endblock scripts %}

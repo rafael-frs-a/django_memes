@@ -1,0 +1,59 @@
+{% extends 'moderation/base.html' %}
+{% block meta %}
+    <meta name="Description" content="{{ APP_NAME }} Moderation - post denial reasons page">
+{% endblock meta %}
+{% block content %}
+    <svg class="table-icon" xmlns="http://www.w3.org/2000/svg" style="display: none;">
+        <symbol id="icon-pen" viewBox="0 0 512 512">
+            <path fill="currentColor" d="M290.74 93.24l128.02 128.02-277.99 277.99-114.14 12.6C11.35 513.54-1.56 500.62.14 485.34l12.7-114.22 277.9-277.88zm207.2-19.06l-60.11-60.11c-18.75-18.75-49.16-18.75-67.91 0l-56.55 56.55 128.02 128.02 56.55-56.55c18.75-18.76 18.75-49.16 0-67.91z"></path>
+        </symbol>
+        <symbol id="icon-trash" viewBox="0 0 512 512">
+            <path fill="currentColor" d="M432 32H312l-9.4-18.7A24 24 0 0 0 281.1 0H166.8a23.72 23.72 0 0 0-21.4 13.3L136 32H16A16 16 0 0 0 0 48v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16zM53.2 467a48 48 0 0 0 47.9 45h245.8a48 48 0 0 0 47.9-45L416 128H32z"></path>
+        </symbol>
+    </svg>
+    <div class="table-container">
+        <div class="table-heading">
+            <a class="btn btn-dark" href="{% url 'moderation:denial-reason-create' %}">Create</a>
+            <h1 class="table-total">Total of reasons: {{ reasons_total }}</h1>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover table-striped">
+                <thead>
+                    <tr class="bg-dark text-white">
+                        <th scope="col">Edit</th>
+                        <th scope="col">Delete</th>
+                        <th scope="col" class="th-sortable" data-sort="description">Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for reason in reasons %}
+                    <tr>
+                        <td class="cell-center cell-icon">
+                            <a class="cell-link" href="{% url 'moderation:denial-reason-edit' id=reason.id %}"><svg class="icon"><use xlink:href="#icon-pen" /></svg>Edit</a>
+                        </td>
+                        <td class="cell-center cell-icon">
+                            <a class="cell-link" href="{% url 'moderation:denial-reason-delete' id=reason.id %}"><svg class="icon"><use xlink:href="#icon-trash" /></svg>Delete</a>
+                        </td>
+                        <td>{{ reason.description }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="nav-pages">
+        {% if page_obj.has_previous %}
+        <a class="btn btn-outline-dark" href="?page=1">First</a>
+        {% endif %}
+        {% for num in page_obj.paginator.page_range %}
+        {% if page_obj.number == num %}
+        <a class="btn btn-dark" href="?page={{ num }}">{{ num }}</a>
+        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+        <a class="btn btn-outline-dark" href="?page={{ num }}">{{ num }}</a>
+        {% endif %}
+        {% endfor %}
+        {% if page_obj.has_next %}
+        <a class="btn btn-outline-dark" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+        {% endif %}
+    </div>
+{% endblock content %}

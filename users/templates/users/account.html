@@ -1,0 +1,81 @@
+{% extends 'base/base_form.html' %}
+{% load widget_tweaks %}
+{% block meta %}
+    <meta name="Description" content="{{ APP_NAME }} account page">
+{% endblock meta %}
+{% block content %}
+    <div class="form-container form-container-md form-no-overflow">
+        <header class="info-user">
+            <img class="rounded-circle account-img" src="{{ user.profile_pic.url }}" alt="Picture Not Found">
+            <div class="info-user-description">
+                <h1>{{ user.username }}</h1>
+                {% for group in user.groups.all %}
+                <h2>{{ group.name }}</h2>
+                {% endfor %}
+            </div>
+        </header>
+        <form method="POST" class="form-account-container" enctype="multipart/form-data" novalidate>
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4">Account Info</legend>
+                {% csrf_token %}
+                <div class="form-group">
+                    <label class="form-control-label" for="email">{{ form.new_email.label }}</label>
+                    {% if form.new_email.errors %}
+                    {% render_field form.new_email class="form-control is-invalid lower-input" name="new_email" id="new_email" placeholder="Email address" %}
+                    <div class="invalid-feedback">
+                        {% for error in form.new_email.errors %}
+                        <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    {% render_field form.new_email class="form-control lower-input" name="new_email" id="new_email" placeholder="Email address" %}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="profile_pic">{{ form.profile_pic.label }}</label>
+                    {% render_field form.profile_pic class="form-control-file" name="profile_pic" id="profile_pic" %}
+                    {% if form.profile_pic.errors %}
+                    {% for error in form.profile_pic.errors %}
+                    <small class="text-danger">{{ error }}</small><br>
+                    {% endfor %}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="current_password">{{ form.current_password.label }}</label>
+                    {% if form.current_password.errors %}
+                    {% render_field form.current_password class="form-control is-invalid" name="current_password" id="current_password" placeholder="Current password" type="password" %}
+                    <div class="invalid-feedback">
+                        {% for error in form.current_password.errors %}
+                        <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    {% render_field form.current_password class="form-control" name="current_password" id="current_password" placeholder="Current password" type="password" %}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="new_password">{{ form.new_password.label }}</label>
+                    {% if form.new_password.errors %}
+                    {% render_field form.new_password class="form-control is-invalid" name="new_password" id="new_password" placeholder="New password" type="password" %}
+                    <div class="invalid-feedback">
+                        {% for error in form.new_password.errors %}
+                        <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    {% render_field form.new_password class="form-control" name="new_password" id="new_password" placeholder="New password" type="password" %}
+                    {% endif %}
+                </div>
+            </fieldset>
+            <div class="form-group">
+                <button class="btn btn-dark btn-block">Save</button>
+            </div>
+            <br>
+            {% if user.delete_requested_at %}
+            <a class="btn btn-secondary" href="{% url 'users:cancel-delete-account' %}">Cancel Account Deletion</a>
+            {% else %}
+            <a class="btn btn-danger" href="{% url 'users:delete-account' %}">Delete Account</a>
+            {% endif %}
+        </form>
+    </div>
+{% endblock content %}

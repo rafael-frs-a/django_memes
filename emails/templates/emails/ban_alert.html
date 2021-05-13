@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+    <p>Hi, {{ user.username }}! {{ ban_msg }}</p>
+    <br>
+    <img src="{{ img_url }}">
+    <br>
+    <br>
+    <p>Reason: {{ reason }}</p>
+    <p>Details: {{ details }}</p>
+    <br>
+    {% if additional_msg %}
+    <p>{{ additional_msg }}</p>
+    {% endif %}
+</body>
+</html>

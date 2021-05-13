@@ -1,0 +1,9 @@
+{% extends 'moderation/base.html' %}
+{% block meta %}
+    <meta name="Description" content="{{ APP_NAME }} Moderation - moderate start page">
+{% endblock meta %}
+{% block content %}
+    <div class="container-msg container-msg-top">
+        <a class="btn btn-lg btn-dark" href="{% url 'moderation:moderate-fetch' %}">Start Moderating</a>
+    </div>
+{% endblock content %}

@@ -1,0 +1,10 @@
+{% extends 'errors/base_error.html' %}
+{% block code %}
+401
+{% endblock %}
+{% block msg %}
+You are not authenticated
+{% endblock %}
+{% block redirect_button %}
+        <a class="btn btn-lg btn-dark" href="{% url 'users:login' %}">Go to Login Page</a>
+{% endblock %}

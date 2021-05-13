@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+    <p>Hello, {{ user.username }}! There was a request to change your account email from {{ user.email }} to {{ new_email }}. Please, click on the following link to validate this email:</p>
+    <a href="{{ link }}" target="_blank">{{ link }}</a>
+    <br>
+    <br>
+    <p>This link is only valid for {{ minutes }} minutes.</p>
+    <p>If you are not {{ user.username }}, please ignore this message.</p>
+</body>
+</html>

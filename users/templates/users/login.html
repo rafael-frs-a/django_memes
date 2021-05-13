@@ -1,0 +1,38 @@
+{% extends 'base/base_form.html' %}
+{% load widget_tweaks %}
+{% block meta %}
+    <meta name="Description" content="{{ APP_NAME }} login page">
+{% endblock meta %}
+{% block formcontent %}
+            <div class="form-group">
+                <label class="form-control-label" for="username">{{ form.username.label }}</label>
+                {% if form.username.errors %}
+                {% render_field form.username class="form-control is-invalid" name="username" id="username" placeholder="Email address or username" %}
+                <div class="invalid-feedback">
+                    {% for error in form.username.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                {% render_field form.username class="form-control" name="username" id="username" placeholder="Email address or username" %}
+                {% endif %}
+            </div>
+            <div class="form-group">
+                <label class="form-control-label" for="password">{{ form.password.label }}</label>
+                {% if form.password.errors %}
+                {% render_field form.password class="form-control is-invalid" name="password" id="password" placeholder="Password" type="password" %}
+                <div class="invalid-feedback">
+                    {% for error in form.password.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                {% render_field form.password class="form-control" name="password" id="password" placeholder="Password" type="password" %}
+                {% endif %}
+            </div>
+{% endblock formcontent %}
+{% block skiplink %}
+        <a class="text-dark link-underline" href="{% url 'users:register' %}">Sign up instead</a>
+        <br>
+        <a class="text-dark link-underline" href="{% url 'users:reset-password' %}">Reset password</a>
+{% endblock skiplink %}

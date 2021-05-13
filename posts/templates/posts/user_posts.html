@@ -1,0 +1,67 @@
+{% extends 'base/base.html' %}
+{% block meta %}
+    <meta name="Description" content="{{ APP_NAME }} my memes page">
+{% endblock meta %}
+{% block navbar-options %}
+                {% if user.is_authenticated %}
+                <li class="nav-item active">
+                    <a class="nav-link" href="{% url 'posts:create-post' %}">Post Meme</a>
+                </li>
+                {% if user.is_moderator %}
+                <li class="nav-item active">
+                    <a class="nav-link" href="{% url 'moderation:home' %}">Moderation</a>
+                </li>
+                {% endif %}
+                {% endif %}
+{% endblock navbar-options %}
+{% block content %}
+    <main id="posts-container" class="container-posts">
+        <h1 class="d-flex justify-content-center mt-4">Total of posts: {{ user.posts.count }}</h1>
+    </main>
+    <template id="sentinel-template">
+        <div class="d-flex justify-content-center mb-3" id="sentinel">
+            <div class="spinner-border" role="status"></div>
+        </div>
+    </template>
+    <template id="no-post-template">
+        <div class="container-msg">
+            <p>No memes so far</p>
+        </div>
+    </template>
+    <template id="waiting-moderation-info">
+        <h2>Status: Waiting for Moderation.</h2>
+    </template>
+    <template id="moderating-info">
+        <h2>Status: Moderating.</h2>
+        <span>Started at: </span>
+        <span class="status-create-at"></span>
+    </template>
+    <template id="denied-info">
+        <h2 class="text-danger">Status: Denied.</h2>
+        <span>Denied at: </span>
+        <span class="status-created-at"></span>
+        <br>
+        <span>Denial reason: </span>
+        <span class="denial-reason"></span>
+        <br>
+        <span>Details: </span>
+        <span class="denial-details"></span>
+    </template>
+    <template id="approved-info">
+        <h2 class="text-success">Status: Approved.</h2>
+        <span>Approved at: </span>
+        <span class="status-created-at"></span>
+    </template>
+    <template id="post-template">
+        <article class="post-container form-container form-container-md">
+            <img class="meme-preview" src="" alt="File Not Found">
+            <div class="mt-3 d-flex">
+                <h1>Created at:</h1><h1 class="post-created-at ml-2"></h1>
+            </div>
+        </article>
+    </template>
+{% endblock content %}
+{% block scripts %}
+    {% load static %}
+    <script src="{% static 'posts/js/user_posts.js' %}" type="text/javascript"></script>
+{% endblock scripts %}

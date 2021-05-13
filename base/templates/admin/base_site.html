@@ -1,0 +1,15 @@
+{% extends 'admin/base.html' %}
+
+{% block title %}{{ APP_NAME }} - Admin{% endblock %}
+{% load static %}
+{% block extrahead %}
+    <link rel="stylesheet" type="text/css" href="{% static 'base/css/admin.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'base/css/colors.css' %}">
+    <link rel="icon" href="{% static 'base/img/favicon.ico' %}" type="image/png"/>
+    <link rel="manifest" href="{% static 'pwa/manifest.json' %}">
+{% endblock %}
+{% block branding %}
+    <h1 id="site-name"><a href="{% url 'admin:index' %}">{{ site_header|default:_('Django administration') }}</a></h1>
+{% endblock %}
+
+{% block nav-global %}{% endblock %}
