@@ -20,6 +20,7 @@ It's supposed to be a meme platform built with Django that I made to learn the f
   - Ban user;
   - CRUD personal standard post denial reasons;
 - Sending emails;
+- PWA: basic PWA functionality, like installing and offline page;
 - Automatic image tagging/text-extraction using Google Cloud Vision.
 
 # Dependencies
