@@ -1,17 +1,20 @@
 import os
+import environ
 from pathlib import Path
 from django.contrib.messages import constants as messages
 
+env = environ.Env()
+
 APP_NAME = 'Django Memes'
 BASE_DIR = Path(__file__).resolve().parent.parent
-SECRET_KEY = os.getenv('SECRET_KEY')
-DEBUG = os.getenv('DEBUG', default=False) == 'True'
-ALLOWED_HOSTS = [os.getenv('SITE_HOST')]
+SECRET_KEY = env('SECRET_KEY', default='default secret key')
+DEBUG = env.bool('DEBUG', False)
+ALLOWED_HOSTS = [env('SITE_HOST')]
 
 if DEBUG:
     ALLOWED_HOSTS = ['*']
 
-SITE_URL = os.getenv('SITE_URL')
+SITE_URL = env('SITE_URL')
 
 INSTALLED_APPS = [
     'base',
@@ -77,14 +80,7 @@ MESSAGE_TAGS = {
 WSGI_APPLICATION = 'django_memes.wsgi.application'
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('DATABASE_NAME'),
-        'USER': os.getenv('DATABASE_USER'),
-        'PASSWORD': os.getenv('DATABASE_PASSWORD'),
-        'HOST': os.getenv('DATABASE_HOST'),
-        'PORT': os.getenv('DATABASE_PORT'),
-    }
+    'default': env.db('DATABASE_URL'),
 }
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -139,20 +135,23 @@ ACCOUNT_DELETION_INTERVAL = 48 * 60 * 60  # 48 hours
 TEST_MODE = False
 TEST_RUNNER = 'base.runner.PytestTestRunner'
 
-CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL')
+CELERY_BROKER_URL = env('CELERY_BROKER_URL')
 CELERY_RESULT_BACKEND = 'django-db'
 CELERY_TIMEZONE = TIME_ZONE
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 
-EMAIL_HOST = os.getenv('EMAIL_HOST')
-EMAIL_PORT = int(os.getenv('EMAIL_PORT'))
-EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
-EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS',) == 'True'
-EMAIL_USE_SSL = os.getenv('EMAIL_USE_SSL',) == 'True'
+EMAIL_HOST = env('EMAIL_HOST')
+EMAIL_PORT = env.int('EMAIL_PORT', 587)
+EMAIL_HOST_USER = env('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
+EMAIL_USE_TLS = env.bool('EMAIL_USE_TLS', False)
+EMAIL_USE_SSL = env.bool('EMAIL_USE_SSL', False)
 EMAIL_FROM = APP_NAME + ' noreply@djangomemes.com'
-EMAIL_TEST_USER = os.getenv('EMAIL_TEST_USER')
+EMAIL_TEST_USER = env('EMAIL_TEST_USER')
 
-os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = os.path.join(
-    BASE_DIR, os.getenv('GOOGLE_API_KEY_URL'))
+GOOGLE_API_KEY_URL = env('GOOGLE_API_KEY_URL')
+
+if GOOGLE_API_KEY_URL:
+    os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = os.path.join(
+        BASE_DIR, GOOGLE_API_KEY_URL)

@@ -44,8 +44,12 @@ def __delete_users():
 
     while True:
         start = time()
-        delete_not_activated_users_expired_links()
-        delete_users_delete_request()
+        try:
+            delete_not_activated_users_expired_links()
+            delete_users_delete_request()
+        except:
+            print('Error while fetching users to delete...')
+
         duration = time() - start
 
         if duration < INTERVAL:
