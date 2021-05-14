@@ -1,12 +1,9 @@
 import os
 import sys
-import environ
 
 
 def main():
-    env = environ.Env()
-
-    if not env.bool('PRODUCTION', False):
+    if not os.getenv('PRODUCTION'):
         import dotenv
         dotenv.load_dotenv()
 
