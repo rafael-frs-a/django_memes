@@ -41,6 +41,5 @@ The project was made using Python 3.9.1, with the used packages listed in the *r
 - **EMAIL_HOST**, **EMAIL_PORT**, **EMAIL_HOST_USER**, **EMAIL_HOST_PASSWORD**, **EMAIL_USE_TLS** and **EMAIL_USE_SSL**: configuration of the email address used to send emails to users;
 - **EMAIL_TEST_USER**: extra email address used in the automated tests. It can be the same as **EMAIL_HOST_USER**, but ideally should be different for the tests logic;
 - **GOOGLE_APPLICATION_CREDENTIALS**: path to the Google Cloud JSON key file, needed to the Google Cloud Vision features;
-- **PRODUCTION**: boolean flag to indicate production environment. It's meant to avoid *dotenv* imports on servers that don't work with it.
 
-This project uses *python-dotenv*, so, except when the project is in production, you can store these variables in a *.env* file at the root.
+This project uses *python-dotenv*, so you can store these variables in a *.env* file at the root.
