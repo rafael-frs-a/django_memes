@@ -1,10 +1,15 @@
 import os
 import sys
-import dotenv
+import environ
 
 
 def main():
-    dotenv.load_dotenv()
+    env = environ.Env()
+
+    if not env.bool('PRODUCTION', False):
+        import dotenv
+        dotenv.load_dotenv()
+
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'django_memes.settings')
 
     try:
