@@ -14,7 +14,7 @@ ALLOWED_HOSTS = [env('SITE_HOST')]
 if DEBUG:
     ALLOWED_HOSTS = ['*']
 
-SITE_URL = env('SITE_URL', default=ALLOWED_HOSTS[0])
+SITE_URL = env('SITE_URL')
 
 INSTALLED_APPS = [
     'base',

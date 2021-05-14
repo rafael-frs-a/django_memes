@@ -34,7 +34,7 @@ The project was made using Python 3.9.1, with the used packages listed in the *r
 
 - **SECRET_KEY**: Django secret key;
 - **SITE_HOST**: host set to *ALLOWED_HOSTS* when the project is not in debug;
-- **SITE_URL**: path of the project domain and port. It's used as a shortcut to generate full url paths meant to be accessed externally, like the links in the automatically-generated emails. If not informed it will get the first value from *ALLOWED_HOSTS*;
+- **SITE_URL**: path of the project domain and port. It's used as a shortcut to generate full url paths meant to be accessed externally, like the links in the automatically-generated emails;
 - **DEBUG**: optional variable. If set to *True*, the project will run in debug mode;
 - **DATABASE_URL**: project database configuration. It must be something like *psql://database_user:database_password@database_host:database_port/database_name*;
 - **CELERY_BROKER_URL**: path to the broker used to deliver tasks to Celery;
