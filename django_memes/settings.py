@@ -149,9 +149,3 @@ EMAIL_USE_TLS = env.bool('EMAIL_USE_TLS', False)
 EMAIL_USE_SSL = env.bool('EMAIL_USE_SSL', False)
 EMAIL_FROM = APP_NAME + ' noreply@djangomemes.com'
 EMAIL_TEST_USER = env('EMAIL_TEST_USER')
-
-GOOGLE_API_KEY_URL = env('GOOGLE_API_KEY_URL')
-
-if GOOGLE_API_KEY_URL:
-    os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = os.path.join(
-        BASE_DIR, GOOGLE_API_KEY_URL)

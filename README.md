@@ -40,6 +40,6 @@ The project was made using Python 3.9.1, with the used packages listed in the *r
 - **CELERY_BROKER_URL**: path to the broker used to deliver tasks to Celery;
 - **EMAIL_HOST**, **EMAIL_PORT**, **EMAIL_HOST_USER**, **EMAIL_HOST_PASSWORD**, **EMAIL_USE_TLS** and **EMAIL_USE_SSL**: configuration of the email address used to send emails to users;
 - **EMAIL_TEST_USER**: extra email address used in the automated tests. It can be the same as **EMAIL_HOST_USER**, but ideally should be different for the tests logic;
-- **GOOGLE_API_KEY_URL**: path relative to the project root of the Google Cloud JSON key file, needed to the Google Cloud Vision features.
+- **GOOGLE_APPLICATION_CREDENTIALS**: path to the Google Cloud JSON key file, needed to the Google Cloud Vision features.
 
 This project uses *python-dotenv*, so you can store these variables in a *.env* file at the root.
