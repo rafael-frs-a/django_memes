@@ -12,5 +12,6 @@ Pillow==8.1.2
 pytest-cov==2.11.1
 pytest-django==4.1.0
 python-dotenv==0.15.0
+whitenoise==5.2.0
 gunicorn
 psycopg2
