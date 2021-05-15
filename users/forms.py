@@ -5,6 +5,7 @@ from django.contrib.auth.models import Group
 from django.contrib.admin import widgets
 from django.core.exceptions import ValidationError
 from django.utils import timezone
+from base.utils import resized_img
 from emails.models import create_change_email_confirmation
 from .models import validate_user
 
@@ -153,6 +154,12 @@ class AccountForm(forms.ModelForm):
         return profile_pic
 
     def save(self, commit=True):
+        profile_pic = self.cleaned_data.get('profile_pic')
+
+        if profile_pic and profile_pic != UserModel.DEFAULT_PROFILE_PIC:
+            resized_img(profile_pic, self.instance.profile_pic.file,
+                        settings.PROFILE_PIC_SIZE)
+
         user = super().save(commit=False)
         new_password = self.cleaned_data['new_password']
 

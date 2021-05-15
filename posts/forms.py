@@ -2,6 +2,7 @@ from django import forms
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.utils import timezone
+from base.utils import resized_img
 from .models import Post
 
 
@@ -43,3 +44,12 @@ class CreatePostForm(forms.ModelForm):
             raise ValidationError(msg.format(hours, minutes, seconds))
 
         return self.cleaned_data
+
+    def save(self, commit=True):
+        meme_file = self.cleaned_data.get('meme_file')
+
+        if meme_file:
+            resized_img(meme_file, self.instance.meme_file.file,
+                        settings.MEME_SIZE)
+
+        return super().save(commit)

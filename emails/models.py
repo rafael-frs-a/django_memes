@@ -1,4 +1,5 @@
 from num2words import num2words
+from urllib.parse import urljoin
 from django.db import models
 from django.db.models.signals import post_save
 from django.conf import settings
@@ -43,8 +44,8 @@ def __send_saved_email(sender, instance, created, **kwargs):
 
 def create_activation_email(user):
     token = get_token_from_email(user.email, 'account-activation')
-    link = settings.SITE_URL + \
-        reverse('users:activate-account', kwargs={'token': token})
+    link = urljoin(settings.SITE_URL, reverse(
+        'users:activate-account', kwargs={'token': token}))
 
     context = {
         'APP_NAME': settings.APP_NAME,
@@ -70,7 +71,8 @@ def create_change_email_confirmation(user, new_email):
         'new_email_token': new_email_token
     }
 
-    link = settings.SITE_URL + reverse('users:change-email', kwargs=tokens)
+    link = urljoin(settings.SITE_URL, reverse(
+        'users:change-email', kwargs=tokens))
 
     context = {
         'user': user,
@@ -88,8 +90,8 @@ def create_change_email_confirmation(user, new_email):
 
 def create_reset_password_email(user):
     token = get_token_from_email(user.email, 'reset-password')
-    link = settings.SITE_URL + \
-        reverse('users:reset-password-token', kwargs={'token': token})
+    link = urljoin(settings.SITE_URL, reverse(
+        'users:reset-password-token', kwargs={'token': token}))
 
     context = {
         'user': user,
@@ -104,8 +106,8 @@ def create_reset_password_email(user):
 
 def create_delete_account_email(user):
     token = get_token_from_email(user.email, 'cancel-delete-account')
-    link = settings.SITE_URL + \
-        reverse('users:cancel-delete-account-token', kwargs={'token': token})
+    link = urljoin(settings.SITE_URL, reverse(
+        'users:cancel-delete-account-token', kwargs={'token': token}))
 
     context = {
         'user': user,
@@ -124,7 +126,7 @@ def create_ban_alert_email(moderation_status):
     reason = moderation_status.denial_reason.description if moderation_status.denial_reason else None
     details = moderation_status.denial_detail
     user = post.author
-    img_url = settings.SITE_URL + post.meme_file.url
+    img_url = urljoin(settings.SITE_URL, post.meme_file.url)
     additional_msg = None
 
     if user.banned:

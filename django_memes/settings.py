@@ -109,6 +109,10 @@ AUTHENTICATION_BACKENDS = [
 TIME_ZONE = 'UTC'
 USE_TZ = True
 
+#  To deactivate Google Cloud storage, comment the two lines bellow
+DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
+GS_BUCKET_NAME = 'django-memes'
+
 STATIC_URL = '/static/'
 STATIC_ROOT = 'staticfiles'
 STATICFILES_DIR = (

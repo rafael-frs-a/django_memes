@@ -1,6 +1,6 @@
 # About
 
-It's supposed to be a meme platform built with Django that I made to learn the framework. Since it's main idea is very similar to my **the-flaskington-post** project, a significant part of the html/css was reused.
+It's supposed to be a meme platform built with Django that I made to learn the framework. Since it's main idea is very similar to my [the-flaskington-post](https://github.com/rafael-frs-a/the-flaskington-post) project, a significant part of the html/css was reused.
 
 # Features
 
@@ -26,7 +26,10 @@ It's supposed to be a meme platform built with Django that I made to learn the f
 
 # Dependencies
 
-The project was made using Python 3.9.1, with the used packages listed in the *requirements.txt* at the root. The database used is PostgreSQL beacause of it's built in [full text search](https://docs.djangoproject.com/en/3.2/ref/contrib/postgres/search/) feature and native Django support. This project also uses Celery to execute parallel tasks, like sending emails, so it's necessary to define a message broker to work with it. The one I used was RabbitMQ.
+The project was made using Python 3.9.1, with the used packages listed in the *requirements.txt* at the root.
+The database used is PostgreSQL beacause of it's built in [full text search](https://docs.djangoproject.com/en/3.2/ref/contrib/postgres/search/) feature and native Django support.
+This project uses Google Cloud for storage and AI vision, so it's necessary to have an account and inform a valid JSON key file, although the Google Cloud storage can be easily deactivated changing the settings file.
+This project also uses Celery to execute parallel tasks, like sending emails, so you have to define a message broker to work with it. The one I used was RabbitMQ.
 
 # Configuration
 
@@ -40,6 +43,6 @@ The project was made using Python 3.9.1, with the used packages listed in the *r
 - **CELERY_BROKER_URL**: path to the broker used to deliver tasks to Celery;
 - **EMAIL_HOST**, **EMAIL_PORT**, **EMAIL_HOST_USER**, **EMAIL_HOST_PASSWORD**, **EMAIL_USE_TLS** and **EMAIL_USE_SSL**: configuration of the email address used to send emails to users;
 - **EMAIL_TEST_USER**: extra email address used in the automated tests. It can be the same as **EMAIL_HOST_USER**, but ideally should be different for the tests logic;
-- **GOOGLE_APPLICATION_CREDENTIALS**: path to the Google Cloud JSON key file, needed to the Google Cloud Vision features;
+- **GOOGLE_APPLICATION_CREDENTIALS**: path to the Google Cloud JSON key file.
 
 This project uses *python-dotenv*, so you can store these variables in a *.env* file at the root.

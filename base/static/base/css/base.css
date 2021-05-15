@@ -190,7 +190,7 @@ button {
 }
 
 .nav-search-info-button, .nav-search-info-button svg {
-    height: 20px;
+    height: 18px;
 }
 
 .nav-search-info-button {
@@ -203,7 +203,7 @@ button {
 }
 
 .info-icon path {
-    fill: #888;
+    fill: #555;
 }
 
 .separator {

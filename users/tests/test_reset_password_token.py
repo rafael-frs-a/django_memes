@@ -1,5 +1,6 @@
 import re
 import pytest
+from urllib.parse import urlsplit
 from time import sleep
 from django.urls import reverse
 from django.conf import settings
@@ -127,9 +128,8 @@ def test_expired_token(client, valid_user_1):
 
 def perform_failed_reset_password(client, user_data, password):
     user = create_test_user_reset_password(user_data)
-    site_url = settings.SITE_URL.replace('/', r'\/')
-    url = re.findall(f'(?<=href="{site_url}).+?(?=")',
-                     user.emails.first().body)[0]
+    url = re.findall('(?<=href=").+?(?=")', user.emails.first().body)[0]
+    url = urlsplit(url).path
     response = client.get(url)
     assert response.status_code == 200
     assertTemplateUsed(response, 'users/reset_password_token.html')

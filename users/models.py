@@ -1,5 +1,4 @@
 import os
-import secrets
 from random import randint
 from django.db import models
 from django.db.models.signals import post_save, pre_save, pre_delete
@@ -10,7 +9,6 @@ from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.core.validators import MinLengthValidator
 from django.core.files.storage import default_storage
 from django.utils.crypto import salted_hmac
-from PIL import Image
 
 
 class UserManager(BaseUserManager):
@@ -76,16 +74,8 @@ class UserManager(BaseUserManager):
 
 
 def _profile_pic_path(instance, filename):
-    while True:
-        name = secrets.token_hex(4)
-        ext = os.path.splitext(filename)[1]
-        new_filename = name + ext
-        path = f'{User.PROFILE_PICS_FOLDER}/{new_filename}'
-
-        if not default_storage.exists(path):
-            break
-
-    return path
+    ext = os.path.splitext(filename)[1]
+    return f'{User.PROFILE_PICS_FOLDER}/{instance.username}{ext}'
 
 
 class User(AbstractBaseUser):
@@ -129,13 +119,6 @@ class User(AbstractBaseUser):
             self.login_id = self.get_rand_id()
 
         super().save(*args, **kwargs)
-
-        if not settings.TEST_MODE and self.profile_pic != User.DEFAULT_PROFILE_PIC:
-            img = Image.open(self.profile_pic.path)
-
-            if img.height > settings.PROFILE_PIC_SIZE[0] or img.width > settings.PROFILE_PIC_SIZE[1]:
-                img.thumbnail(settings.PROFILE_PIC_SIZE)
-                img.save(self.profile_pic.path)
 
     def increase_post_count(self):
         self.count_posts_interval += 1

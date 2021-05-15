@@ -11,7 +11,6 @@ from django.http import Http404
 from django.urls import reverse
 from django.utils import timezone
 from users.models import validate_user
-from PIL import Image
 from .tasks import get_post_labels
 
 UserModel = get_user_model()
@@ -83,13 +82,6 @@ class Post(models.Model):
             self.identifier = self._get_identifier()
 
         super().save(*args, **kwargs)
-
-        if not settings.TEST_MODE and default_storage.exists(self.meme_file.name):
-            img = Image.open(self.meme_file.path)
-
-            if img.height > settings.MEME_SIZE[0] or img.width > settings.MEME_SIZE[1]:
-                img.thumbnail(settings.MEME_SIZE)
-                img.save(self.meme_file.path)
 
     def __str__(self):
         status = self.moderation_status
