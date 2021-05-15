@@ -8,11 +8,18 @@ def _annotate(post):
         return None
 
     client = vision.ImageAnnotatorClient()
+    path = post.meme_file.url
 
-    with io.open(post.meme_file.path, 'rb') as img:
-        content = img.read()
+    if path.startswith('http') or path.startswith('gs:'):
+        image = vision.Image()
+        image.source.image_uri = path
 
-    image = vision.Image(content=content)
+    else:
+        with io.open(post.meme_file.path, 'rb') as img:
+            content = img.read()
+
+        image = vision.Image(content=content)
+
     response = client.text_detection(image=image)
     return response.full_text_annotation
 
