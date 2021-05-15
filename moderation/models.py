@@ -234,6 +234,12 @@ def __change_post_moderation_status(sender, instance, created, **kwargs):
         instance.post.moderation_status = Post.APPROVED
         instance.post.approved_at = timezone.now()
 
+    if instance.post.moderation_status != Post.APPROVED:
+        instance.post.approve_post = None
+        instance.post.meme_labelled = False
+        instance.post.meme_text = None
+        instance.post.tags.all().delete()
+
     instance.post.save()
 
 

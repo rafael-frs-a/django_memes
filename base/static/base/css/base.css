@@ -86,7 +86,6 @@ button {
     border-style: solid;
     border-color: #ccc;
     border-radius: 10px;
-    padding: 40px;
     margin: 40px auto;
     width: 90%;
     overflow-x: auto;
@@ -277,6 +276,14 @@ button {
     .moderate-actions > *:first-child {
         margin-top: 0;
     }
+
+    .form-container {
+        padding: 20px;
+    }
+
+    .post-container {
+        padding: 20px 4px;
+    }
 }
 
 @media only screen and (min-width: 501px) {
@@ -304,6 +311,10 @@ button {
 
     .moderate-actions > *:first-child {
         margin-left: 0;
+    }
+
+    .form-container {
+        padding: 40px;
     }
 }
 
