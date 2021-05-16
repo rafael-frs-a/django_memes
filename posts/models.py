@@ -208,7 +208,7 @@ def get_user_posts(user, page, client_timezone=0):
                 settings.DATE_TIME_DISPLAY_FORMAT)
 
             if post.moderation_status == Post.DENIED:
-                post_data['denial_reason'] = status.denial_reason.description
+                post_data['denial_reason'] = status.denial_reason.description if status.denial_reason else 'Reason deleted'
                 post_data['denial_details'] = status.denial_detail or 'None'
 
         response['posts'].append(post_data)
