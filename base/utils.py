@@ -1,4 +1,5 @@
 from io import BytesIO
+from django.conf import settings
 from PIL import Image
 
 
@@ -7,6 +8,9 @@ def inverse_case(text):
 
 
 def resized_img(image, file_object, image_size):
+    if settings.TEST_MODE:
+        return
+
     img = Image.open(image)
     img.thumbnail(image_size)
     img_bytes = BytesIO()
