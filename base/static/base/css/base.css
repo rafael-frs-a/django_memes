@@ -237,19 +237,19 @@ button {
 }
 
 @media (max-width: 991px) {
-    .show .account-container {
+    .account-container {
         margin-left: 0;
         margin-right: 0;
     }
 
-    #navbarSupportedContent.show .dropdown-menu {
+    #navbarSupportedContent .dropdown-menu {
         position: absolute;
         left: auto;
         right: auto;
         top: 95%;
     }
 
-    #navbarSupportedContent.show .separator {
+    #navbarSupportedContent .separator {
         display: none;
     }
 }
