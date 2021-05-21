@@ -124,11 +124,10 @@ class User(AbstractBaseUser):
     def increase_post_count(self):
         self.count_posts_interval += 1
 
-        if self.count_posts_interval == self.max_posts_interval:
+        if self.count_posts_interval >= self.max_posts_interval:
             self.post_wait_until = timezone.now() + \
                 timezone.timedelta(seconds=settings.POST_WAITING_INTERVAL)
-        else:
-            self.count_posts_interval %= self.max_posts_interval
+            self.count_posts_interval = 0
 
     def has_group(self, group):
         return self.groups.filter(name=group).exists()
