@@ -112,8 +112,13 @@ def account(request):
 
         return redirect('posts:home')
 
+    context = {
+        'title': 'Account',
+        'max_posts': settings.MIN_MAX_CONSECUTIVE_POSTS
+    }
+
     return perform_prg(request, AccountForm, {'instance': request.user}, 'users/account.html',
-                       {'title': 'Account'}, account_is_valid)
+                       context, account_is_valid)
 
 
 @require_http_methods(['GET', 'POST'])

@@ -94,7 +94,8 @@ class User(AbstractBaseUser):
     temporary_bans = models.PositiveSmallIntegerField(default=0)
     groups = models.ManyToManyField(Group, through='GroupUser')
     login_id = models.BigIntegerField(unique=True)
-    max_posts_interval = models.PositiveSmallIntegerField(default=2)
+    max_posts_interval = models.PositiveSmallIntegerField(
+        default=settings.MIN_MAX_CONSECUTIVE_POSTS)
     count_posts_interval = models.PositiveSmallIntegerField(default=0)
     post_wait_until = models.DateTimeField(blank=True, null=True)
     delete_requested_at = models.DateTimeField(blank=True, null=True)

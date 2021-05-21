@@ -135,11 +135,13 @@ def test_denial_reason_another_user(client, valid_user_1, valid_user_2, valid_im
     assert response.url == url
 
 
-@pytest.mark.django_db
-def test_successfully_deny_post(client, valid_user_1, valid_image_file, valid_denial_reason_1):
-    user = create_moderator_test_user(valid_user_1)
-    post = create_test_post(user, valid_image_file)
-    reason = create_test_denial_reason(valid_denial_reason_1)
+def perform_successful_deny_post(client, user_data, initial_max_user_posts,
+                                 final_max_user_posts, image_file, denial_reason):
+    user = create_moderator_test_user(user_data)
+    user.max_posts_interval = initial_max_user_posts
+    user.save()
+    post = create_test_post(user, image_file)
+    reason = create_test_denial_reason(denial_reason)
     client.force_login(user)
     fetch_post_moderate(user)
     assert user.status_moderating.post == post
@@ -155,6 +157,20 @@ def test_successfully_deny_post(client, valid_user_1, valid_image_file, valid_de
     assert post.moderation_status == Post.DENIED
     status = post.status.filter(result=ModerationStatus.DENIED).first()
     assert status.moderator_result == user
+    user = UserModel.objects.filter(id=user.id).first()
+    assert user.max_posts_interval == final_max_user_posts
+
+
+@pytest.mark.django_db
+def test_successfully_deny_post(client, valid_user_1, valid_image_file, valid_denial_reason_1):
+    perform_successful_deny_post(client, valid_user_1, settings.MIN_MAX_CONSECUTIVE_POSTS,
+                                 settings.MIN_MAX_CONSECUTIVE_POSTS, valid_image_file, valid_denial_reason_1)
+
+
+@pytest.mark.django_db
+def test_successfully_deny_post_decrease_max_posts(client, valid_user_1, valid_image_file, valid_denial_reason_1):
+    perform_successful_deny_post(client, valid_user_1, settings.MIN_MAX_CONSECUTIVE_POSTS + 1,
+                                 settings.MIN_MAX_CONSECUTIVE_POSTS, valid_image_file, valid_denial_reason_1)
 
 
 @pytest.mark.django_db

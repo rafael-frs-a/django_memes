@@ -11,6 +11,7 @@ UserModel = get_user_model()
 @pytest.mark.django_db
 def test_successful_approve_post(client, valid_user_1, valid_image_file):
     user = create_moderator_test_user(valid_user_1)
+    max_posts_interval = user.max_posts_interval
     post = create_test_post(user, valid_image_file)
     client.force_login(user)
     fetch_post_moderate(user)
@@ -26,6 +27,7 @@ def test_successful_approve_post(client, valid_user_1, valid_image_file):
     status = post.status.filter(result=ModerationStatus.APPROVED).first()
     assert status.moderator_result == user
     user = UserModel.objects.filter(id=user.id).first()
+    assert user.max_posts_interval == max_posts_interval + 1
 
     with pytest.raises(ModerationStatus.DoesNotExist):
         user.status_moderating

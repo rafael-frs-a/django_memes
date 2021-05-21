@@ -271,9 +271,24 @@ def __label_post(sender, instance, **kwargs):
     instance.post.save()
 
 
+def __user_max_posts_interval(sender, instance, **kwargs):
+    current_post = Post.objects.filter(id=instance.id).first()
+
+    if instance.moderation_status == Post.APPROVED:
+        if not current_post or current_post.moderation_status != Post.APPROVED:
+            instance.author.max_posts_interval += 1
+            instance.author.save()
+    elif instance.moderation_status == Post.DENIED:
+        if not current_post or current_post.moderation_status != Post.DENIED:
+            instance.author.max_posts_interval = max(
+                settings.MIN_MAX_CONSECUTIVE_POSTS, instance.author.max_posts_interval - 1)
+            instance.author.save()
+
+
 pre_save.connect(__delete_old_meme_file_pre_save, sender=Post)
 post_delete.connect(__delete_old_meme_file, sender=Post)
 post_save.connect(__increase_author_post_count, sender=Post)
 post_save.connect(__get_post_labels, sender=Post)
+pre_save.connect(__user_max_posts_interval, sender=Post)
 post_save.connect(__label_post, sender=PostTag)
 post_delete.connect(__label_post, sender=PostTag)

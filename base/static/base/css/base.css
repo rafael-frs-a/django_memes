@@ -185,23 +185,36 @@ button {
 }
 
 .nav-form-search input {
-    padding-right: 28px;
+    padding-right: 22px;
 }
 
 .nav-search-info-button, .nav-search-info-button svg {
     height: 18px;
+    width: 18px;
+    padding: 0;
+}
+
+.account-posts-limit {
+    display: flex;
+    align-items: center;
+}
+
+.posts-limit-info-button, .posts-limit-info-button svg {
+    height: 18px;
+    width: 18px;
+    padding: 0;
 }
 
 .nav-search-info-button {
     position: absolute;
-    right: 0;
+    right: 4px;
 }
 
-.nav-search-info-button:focus {
+.nav-search-info-button:focus, .posts-limit-info-button:focus {
     outline: 0;
 }
 
-.info-icon path {
+#info-icon path {
     fill: #555;
 }
 
