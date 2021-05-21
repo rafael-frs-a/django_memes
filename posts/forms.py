@@ -39,7 +39,7 @@ class CreatePostForm(forms.ModelForm):
             hours = diff // (60 * 60)
             minutes = (diff % (60 * 60)) // 60
             seconds = diff % (60 * 60) % 60
-            msg = f'Max number of {self.instance.author.max_posts_interval} posts reached. ' + \
+            msg = f'Max number of consecutive posts reached. ' + \
                 'Time remaining until you can post again: {:02d}:{:02d}:{:02d}.'
             raise ValidationError(msg.format(hours, minutes, seconds))
 
