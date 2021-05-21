@@ -1,7 +1,6 @@
 import os
 import secrets
 from django.db import models
-from django.db.models import Q
 from django.db.models.signals import post_save, pre_save, post_delete
 from django.contrib.auth import get_user_model
 from django.conf import settings
@@ -46,6 +45,7 @@ class Post(models.Model):
     meme_labels = models.TextField(blank=True, null=True)
     meme_text = models.TextField(blank=True, null=True)
     meme_labelled = models.BooleanField(default=False)
+    meme_search = models.TextField(blank=True, null=True)
 
     @property
     def tags_sorted(self):
@@ -120,17 +120,14 @@ def get_approved_posts(page, search_filter, author=None):
     response = {}
     response['posts'] = []
     response['has_next'] = False
-    posts = Post.objects.filter(moderation_status=Post.APPROVED)
-
-    if search_filter:
-        posts &= Post.objects.filter(Q(meme_labels__search=search_filter) |
-                                     Q(meme_text__search=search_filter) |
-                                     Q(meme_labels__icontains=search_filter) |
-                                     Q(meme_text__icontains=search_filter) |
-                                     Q(author__username__icontains=search_filter))
 
     if author:
-        posts &= Post.objects.filter(author=author)
+        posts = author.posts.filter(moderation_status=Post.APPROVED)
+    else:
+        posts = Post.objects.filter(moderation_status=Post.APPROVED)
+
+    if search_filter:
+        posts &= Post.objects.filter(meme_search__search=search_filter)
 
     posts = posts.order_by('-approved_at')
     p = Paginator(posts, settings.POSTS_PER_PAGE)
@@ -285,10 +282,19 @@ def __user_max_posts_interval(sender, instance, **kwargs):
             instance.author.save()
 
 
+def __feed_post_search(sender, instance, **kwargs):
+    current_post = Post.objects.filter(id=instance.id).first()
+
+    if (not current_post or current_post.meme_text != instance.meme_text or
+            current_post.meme_labels != instance.meme_labels or instance.author.username not in instance.meme_search):
+        instance.meme_search = f'{instance.meme_text} {instance.meme_labels} {instance.author.username}'
+
+
 pre_save.connect(__delete_old_meme_file_pre_save, sender=Post)
 post_delete.connect(__delete_old_meme_file, sender=Post)
 post_save.connect(__increase_author_post_count, sender=Post)
 post_save.connect(__get_post_labels, sender=Post)
 pre_save.connect(__user_max_posts_interval, sender=Post)
+pre_save.connect(__feed_post_search, sender=Post)
 post_save.connect(__label_post, sender=PostTag)
 post_delete.connect(__label_post, sender=PostTag)
