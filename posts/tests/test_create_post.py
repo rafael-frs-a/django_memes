@@ -2,6 +2,7 @@ import os
 import pytest
 from time import sleep
 from django.urls import reverse
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.files.storage import default_storage
 from django.utils import timezone
@@ -22,10 +23,6 @@ def test_render_template(client, valid_user_1):
     assertTemplateUsed(response, 'posts/create_post.html')
 
 
-def get_first_user():
-    return UserModel.objects.first()
-
-
 def create_test_user_login(client, user_data):
     user = create_test_user(user_data)
     client.force_login(user)
@@ -44,9 +41,8 @@ def test_create_post_missing_file(client, valid_user_1):
     user = create_test_user_login(client, valid_user_1)
     perform_create_post(client, {}, 'posts:create-post')
     assert user.posts.count() == 0
-    new_user = get_first_user()
-    assert user == new_user
-    assert new_user.count_posts_interval == 0
+    user = UserModel.objects.filter(id=user.id).first()
+    assert user.count_posts_interval == 0
 
 
 @pytest.mark.django_db
@@ -66,9 +62,8 @@ def test_invalid_images(client, valid_user_1, image):
 
         perform_create_post(client, post_data, 'posts:create-post')
         assert user.posts.count() == 0
-        new_user = get_first_user()
-        assert user == new_user
-        assert new_user.count_posts_interval == 0
+        user = UserModel.objects.filter(id=user.id).first()
+        assert user.count_posts_interval == 0
 
 
 @pytest.mark.django_db
@@ -91,9 +86,8 @@ def test_valid_images(client, valid_user_1, image):
 
         perform_create_post(client, post_data, 'posts:home')
         assert user.posts.count() == 1
-        new_user = get_first_user()
-        assert user == new_user
-        assert new_user.count_posts_interval == 1
+        user = UserModel.objects.filter(id=user.id).first()
+        assert user.count_posts_interval == 1
         assert default_storage.exists(user.posts.first().meme_file.name)
 
 
@@ -112,16 +106,14 @@ def test_limit_posts(client, valid_user_1, valid_image_file_1):
 
             perform_create_post(client, post_data, 'posts:home')
             assert user.posts.count() == count
-            new_user = get_first_user()
-            assert user == new_user
-            assert new_user.count_posts_interval == count
+            user = UserModel.objects.filter(id=user.id).first()
+            assert user.count_posts_interval == count % user.max_posts_interval
 
     for post in user.posts.all():
         assert default_storage.exists(post.meme_file.name)
 
-    new_user = get_first_user()
-    assert user == new_user
-    assert new_user.post_wait_until > timezone.now()
+    user = UserModel.objects.filter(id=user.id).first()
+    assert user.post_wait_until > timezone.now()
 
     with open(image_path, 'rb') as img:
         post_data = {
@@ -130,9 +122,8 @@ def test_limit_posts(client, valid_user_1, valid_image_file_1):
 
         perform_create_post(client, post_data, 'posts:create-post')
         assert user.posts.count() == count
-        new_user = get_first_user()
-        assert user == new_user
-        assert new_user.count_posts_interval == count
+        user = UserModel.objects.filter(id=user.id).first()
+        assert user.count_posts_interval == count % user.max_posts_interval
 
 
 @pytest.mark.django_db
@@ -140,8 +131,7 @@ def test_limit_posts_expired(client, valid_user_1, valid_image_file_1):
     current_path = os.path.dirname(os.path.abspath(__file__))
     image_path = os.path.join(current_path, 'images', valid_image_file_1)
     user = create_test_user_login(client, valid_user_1)
-    user.count_posts_interval = user.max_posts_interval
-    user.post_wait_until = timezone.now() + timezone.timedelta(seconds=2)
+    user.post_wait_until = timezone.now() + timezone.timedelta(seconds=1)
     user.save()
 
     with open(image_path, 'rb') as img:
@@ -151,8 +141,9 @@ def test_limit_posts_expired(client, valid_user_1, valid_image_file_1):
 
         perform_create_post(client, post_data, 'posts:create-post')
         assert user.posts.count() == 0
+        assert user.count_posts_interval == 0
 
-    sleep(2)
+    sleep(1)
 
     with open(image_path, 'rb') as img:
         post_data = {
@@ -161,6 +152,39 @@ def test_limit_posts_expired(client, valid_user_1, valid_image_file_1):
 
         perform_create_post(client, post_data, 'posts:home')
         assert user.posts.count() == 1
-        new_user = get_first_user()
-        assert user == new_user
-        assert new_user.count_posts_interval == 1
+        user = UserModel.objects.filter(id=user.id).first()
+        assert user.count_posts_interval == 1
+
+
+@pytest.mark.django_db
+def test_too_long_since_last_post(client, valid_user_1, valid_image_file_1):
+    current_path = os.path.dirname(os.path.abspath(__file__))
+    image_path = os.path.join(current_path, 'images', valid_image_file_1)
+    user = create_test_user_login(client, valid_user_1)
+    post_waiting_interval = settings.POST_WAITING_INTERVAL
+    settings.POST_WAITING_INTERVAL = 1
+
+    for count in range(1, user.max_posts_interval + 1):
+        with open(image_path, 'rb') as img:
+            post_data = {
+                'meme_file': img
+            }
+
+            perform_create_post(client, post_data, 'posts:home')
+            assert user.posts.count() == count
+            user = UserModel.objects.filter(id=user.id).first()
+            assert user.count_posts_interval == count % user.max_posts_interval
+
+    sleep(1)
+
+    with open(image_path, 'rb') as img:
+        post_data = {
+            'meme_file': img
+        }
+
+        perform_create_post(client, post_data, 'posts:home')
+        assert user.posts.count() == count + 1
+        user = UserModel.objects.filter(id=user.id).first()
+        assert user.count_posts_interval == 1
+
+    settings.POST_WAITING_INTERVAL = post_waiting_interval

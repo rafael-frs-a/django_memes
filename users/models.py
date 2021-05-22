@@ -6,7 +6,7 @@ from django.conf import settings
 from django.utils import timezone
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, Group
 from django.contrib.auth.validators import UnicodeUsernameValidator
-from django.core.validators import MinLengthValidator
+from django.core.validators import MinLengthValidator, MaxValueValidator
 from django.core.files.storage import default_storage
 from django.utils.crypto import salted_hmac
 
@@ -95,7 +95,7 @@ class User(AbstractBaseUser):
     groups = models.ManyToManyField(Group, through='GroupUser')
     login_id = models.BigIntegerField(unique=True)
     max_posts_interval = models.PositiveSmallIntegerField(
-        default=settings.MIN_MAX_CONSECUTIVE_POSTS)
+        default=settings.MIN_MAX_CONSECUTIVE_POSTS, validators=[MaxValueValidator(settings.MAX_MAX_CONSECUTIVE_POSTS)])
     count_posts_interval = models.PositiveSmallIntegerField(default=0)
     post_wait_until = models.DateTimeField(blank=True, null=True)
     delete_requested_at = models.DateTimeField(blank=True, null=True)
@@ -122,6 +122,11 @@ class User(AbstractBaseUser):
         super().save(*args, **kwargs)
 
     def increase_post_count(self):
+        last_post = self.posts.order_by('-created_at').first()
+
+        if last_post and last_post.created_at + timezone.timedelta(seconds=settings.POST_WAITING_INTERVAL) <= timezone.now():
+            self.count_posts_interval = 0
+
         self.count_posts_interval += 1
 
         if self.count_posts_interval >= self.max_posts_interval:

@@ -273,7 +273,8 @@ def __user_max_posts_interval(sender, instance, **kwargs):
 
     if instance.moderation_status == Post.APPROVED:
         if not current_post or current_post.moderation_status != Post.APPROVED:
-            instance.author.max_posts_interval += 1
+            instance.author.max_posts_interval = min(
+                settings.MAX_MAX_CONSECUTIVE_POSTS, instance.author.max_posts_interval + 1)
             instance.author.save()
     elif instance.moderation_status == Post.DENIED:
         if not current_post or current_post.moderation_status != Post.DENIED:

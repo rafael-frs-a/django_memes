@@ -14,6 +14,19 @@ def error_404(request, exception):
     return render(request, 'errors/404.html', {'title': 'Page Not Found'}, status=404)
 
 
+def _add_form_errors(form, errors):
+    for field in form:
+        while field.errors:
+            field.errors.pop()
+
+        if field.html_name not in errors:
+            continue
+
+        for error in errors[field.html_name]:
+            if error not in field.errors:
+                form.add_error(field.html_name, error)
+
+
 class PrgView(ProcessFormView):
     def form_invalid(self, form):
         self.request.session['form-data'] = form.data
@@ -40,17 +53,7 @@ class PrgView(ProcessFormView):
             form_args['instance'] = self.object
 
         form = self.get_form_class()(**form_args)
-
-        for field in form:
-            while field.errors:
-                field.errors.pop()
-
-            if field.html_name not in errors:
-                continue
-
-            for error in errors[field.html_name]:
-                if error not in field.errors:
-                    form.add_error(field.html_name, error)
+        _add_form_errors(form, errors)
 
         while form.non_field_errors():
             form.errors[NON_FIELD_ERRORS].pop()
@@ -91,18 +94,7 @@ def perform_prg(request, cls_form, form_args, template, context, func_is_valid):
         pass
 
     form = cls_form(**form_args)
-
-    for field in form:
-        while field.errors:
-            field.errors.pop()
-
-        if field.html_name not in errors:
-            continue
-
-        for error in errors[field.html_name]:
-            if error not in field.errors:
-                form.add_error(field.html_name, error)
-
+    _add_form_errors(form, errors)
     context.update({'form': form})
     return render(request, template, context)
 

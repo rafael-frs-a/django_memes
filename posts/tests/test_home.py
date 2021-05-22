@@ -83,9 +83,11 @@ def test_get_posts(client, valid_user_1, valid_user_2, valid_image_file_1):
     check_response_data(client, 1, [posts[0]], True)
     check_response_data(client, 2, [posts[1]], False)
     check_response_data(client, 3, [], False)
-    check_response_data(client, 1, [posts[0]], False, user2.username.lower())
-    check_response_data(client, 1, [posts[1]], False, user1.username.lower())
-    check_response_data(client, 1, [posts[0]], False, 'User2 Label')
-    check_response_data(client, 1, [posts[1]], False, 'User1 Label')
-    check_response_data(client, 1, [posts[0]], False, 'User2 Text')
-    check_response_data(client, 1, [posts[1]], False, 'User1 Text')
+    check_response_data(
+        client, 1, [posts[0]], False, f'User2 Label {user2.username.lower()}')
+    check_response_data(
+        client, 1, [posts[1]], False, f'User1 Label {user1.username.lower()}')
+    check_response_data(
+        client, 1, [posts[0]], False, f'User2 Text {user2.username.lower()}')
+    check_response_data(
+        client, 1, [posts[1]], False, f'User1 Text {user1.username.lower()}')
