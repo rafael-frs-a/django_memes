@@ -46,3 +46,7 @@ This project also uses Celery to execute parallel tasks, like sending emails, so
 - **GOOGLE_APPLICATION_CREDENTIALS**: path to the Google Cloud JSON key file.
 
 This project uses *python-dotenv*, so you can store these variables in a *.env* file at the root.
+
+# Code quality
+
+Codebeat quality review available on [this link](https://codebeat.co/projects/github-com-rafael-frs-a-django_memes-master).
