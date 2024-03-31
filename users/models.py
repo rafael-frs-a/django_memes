@@ -110,7 +110,7 @@ class User(AbstractBaseUser):
         user_count = User.objects.count()
 
         while True:
-            rand_id = randint(1, 1e10 + user_count)
+            rand_id = randint(1, int(1e10) + user_count)
 
             if not User.objects.filter(login_id=rand_id).first():
                 return rand_id

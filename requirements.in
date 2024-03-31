@@ -1,0 +1,18 @@
+# Production packages
+celery==5.0.5
+dj-inmemorystorage==2.1.0
+django==3.1.6
+django-celery-results==2.0.1
+django-environ==0.4.5
+django-sslserver==0.22
+django-storages==1.11.1
+django-widget-tweaks==1.4.8
+google-cloud-storage==1.38.0
+google-cloud-vision==2.3.1
+itsdangerous~=1.1
+num2words~=0.5
+pillow
+python-dotenv~=0.15
+whitenoise~=5.2
+gunicorn
+psycopg2
