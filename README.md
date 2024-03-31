@@ -2,6 +2,11 @@
 
 It's supposed to be a meme platform built with Django that I made to learn the framework. Since it's main idea is very similar to my [the-flaskington-post](https://github.com/rafael-frs-a/the-flaskington-post) project, a significant part of the html/css was reused.
 
+![Screenshot 2024-03-31 123603](https://github.com/rafael-frs-a/django_memes/assets/76019940/5f6ec838-beba-4904-842d-81b305fedab4)
+
+![Screenshot 2024-03-31 124020](https://github.com/rafael-frs-a/django_memes/assets/76019940/e537c003-d9f5-4a56-9013-0610ba238c14)
+
+
 # Features
 
 - Account features:
